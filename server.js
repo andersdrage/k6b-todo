@@ -221,6 +221,7 @@ async function translateSectionsWithOpenAI(input) {
   if (!OPENAI_API_KEY) {
     const error = new Error("OPENAI_API_KEY is not configured");
     error.statusCode = 503;
+    error.code = "missing_api_key";
     throw error;
   }
 
@@ -249,13 +250,21 @@ async function translateSectionsWithOpenAI(input) {
     const errorText = await response.text();
     const error = new Error(`Translation API failed with ${response.status}: ${errorText}`);
     error.statusCode = 502;
+    error.code = "openai_api_error";
     throw error;
   }
 
   const payload = await response.json();
-  const rawText = getTextFromResponsesPayload(payload);
-  const parsed = extractJsonFromModelOutput(rawText);
-  return sanitizeTranslationOutput(parsed, input.sections);
+  try {
+    const rawText = getTextFromResponsesPayload(payload);
+    const parsed = extractJsonFromModelOutput(rawText);
+    return sanitizeTranslationOutput(parsed, input.sections);
+  } catch (parseError) {
+    const error = new Error(`Invalid translation response format: ${parseError.message}`);
+    error.statusCode = 502;
+    error.code = "invalid_model_output";
+    throw error;
+  }
 }
 
 function ensureDataFile() {
@@ -334,7 +343,19 @@ app.post("/api/translate", async (req, res) => {
     res.json(translated);
   } catch (error) {
     const statusCode = Number(error?.statusCode) || 500;
-    res.status(statusCode).json({ error: "Translation failed" });
+    const code = error?.code || "translation_failed";
+    console.error("[translate] failed", {
+      statusCode,
+      code,
+      message: error?.message || "unknown_error"
+    });
+
+    const responseBody = { error: "Translation failed", code };
+    if (process.env.NODE_ENV !== "production") {
+      responseBody.message = error?.message || "Unknown translation error";
+    }
+
+    res.status(statusCode).json(responseBody);
   }
 });
 
