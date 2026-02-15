@@ -8,27 +8,38 @@
         {
           "id": "task-3",
           "text": "Silikonere",
-          "done": true
+          "done": true,
+          "starred": false
         },
         {
           "id": "task-4",
           "text": "Fikse flis i entré",
-          "done": true
+          "done": true,
+          "starred": false
         },
         {
           "id": "task-5",
           "text": "Pusse ferdig vegg",
-          "done": true
+          "done": true,
+          "starred": false
         },
         {
           "id": "task-5bbbc72a-0033-4f11-9f87-36c6ef999a86",
           "text": "Flislegge bad",
-          "done": false
+          "done": false,
+          "starred": false
         },
         {
           "id": "task-2097ea5e-b1c5-47fe-a574-5731490f19ed",
           "text": "Fuge fliser",
-          "done": false
+          "done": false,
+          "starred": false
+        },
+        {
+          "id": "task-37bd278b-aeca-4641-a27d-28f961fca34d",
+          "text": "New task",
+          "done": false,
+          "starred": false
         }
       ]
     },
@@ -39,24 +50,64 @@
         {
           "id": "task-3d4b012f-1637-4f84-a01a-a6902081eed1",
           "text": "Montere kjøkken",
-          "done": false
+          "done": false,
+          "starred": false
         },
         {
           "id": "task-3a0a90f8-75cb-4e35-920d-cd3cd472cf3f",
           "text": "Montere benkeplate",
-          "done": false
+          "done": false,
+          "starred": false
+        },
+        {
+          "id": "task-ad6dae64-fd45-4bf2-9432-d91c56001301",
+          "text": "New task",
+          "done": false,
+          "starred": false
         }
       ]
     },
     {
       "id": "section-7bb27510-dece-4ae6-8383-cbd6e2f71c54",
       "title": "Bad",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "task-48efa2b7-7459-4229-9175-3d5a4a55746c",
+          "text": "New task",
+          "done": false,
+          "starred": false
+        },
+        {
+          "id": "task-a23983a3-bdd7-42b6-9e86-9d9b0b33b541",
+          "text": "New task",
+          "done": false,
+          "starred": false
+        },
+        {
+          "id": "task-3f7717a6-ebbc-47d6-9123-aea6ca401422",
+          "text": "New task",
+          "done": false,
+          "starred": false
+        }
+      ]
     },
     {
       "id": "section-821fa19c-48cf-4abc-9a05-f61d036b7669",
       "title": "New section",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "task-9de52358-e4cc-48ec-ac3b-ce04c639a405",
+          "text": "New task",
+          "done": false,
+          "starred": false
+        },
+        {
+          "id": "task-a6672cd7-3920-4586-b912-2be3525e8d58",
+          "text": "New task",
+          "done": false,
+          "starred": false
+        }
+      ]
     },
     {
       "id": "section-f9624887-7f5f-4899-9e44-5629735a6f72",
@@ -64,5 +115,5 @@
       "tasks": []
     }
   ],
-  "updatedAt": "2026-02-15T21:38:11.658Z"
+  "updatedAt": "2026-02-15T23:36:18.640Z"
 }

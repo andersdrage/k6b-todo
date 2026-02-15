@@ -334,6 +334,11 @@ function getDisplayTaskText(sectionId, task) {
   return translatedTaskTexts.get(`${sectionId}:${task.id}`) || task.text;
 }
 
+function sectionInputWidthCh(title) {
+  const len = String(title || "").trim().length;
+  return Math.max(8, Math.min(40, len + 1));
+}
+
 function removeTask(sectionId, taskId) {
   const section = state.sections.find((entry) => entry.id === sectionId);
   if (!section) {
@@ -518,8 +523,10 @@ function render() {
         <article class="section-card" data-section-id="${escapeHtml(section.id)}" style="--index:${index}">
           <div class="section-head">
             <button class="drag-btn section-drag" type="button" title="Drag section" aria-label="Drag section">⋮⋮</button>
-            <input class="section-title-input" type="text" value="${escapeHtml(sectionTitle)}" maxlength="80" ${sectionReadonly} data-section-id="${escapeHtml(section.id)}" />
-            <button type="button" class="task-add-btn section-task-add" data-action="create-task" data-section-id="${escapeHtml(section.id)}" ${addTaskDisabled} aria-label="Add task">+</button>
+            <div class="section-title-wrap">
+              <input class="section-title-input" type="text" value="${escapeHtml(sectionTitle)}" style="width:${sectionInputWidthCh(sectionTitle)}ch" maxlength="80" ${sectionReadonly} data-section-id="${escapeHtml(section.id)}" />
+              <button type="button" class="task-add-btn section-task-add" data-action="create-task" data-section-id="${escapeHtml(section.id)}" ${addTaskDisabled} aria-label="Add task">+</button>
+            </div>
             <button class="delete-btn" type="button" title="Delete section" aria-label="Delete section" data-action="delete-section" data-section-id="${escapeHtml(section.id)}">✕</button>
           </div>
 

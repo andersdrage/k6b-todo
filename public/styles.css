@@ -196,15 +196,30 @@ h1 {
 }
 
 .section-head {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  display: flex;
   align-items: center;
   gap: 0.12rem;
   margin-bottom: 0.24rem;
 }
 
+.section-title-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  flex: 0 1 auto;
+  min-width: 8ch;
+  max-width: calc(100% - 4.2rem);
+}
+
+.section-head > .delete-btn {
+  margin-left: auto;
+}
+
 .section-title-input {
-  width: 100%;
+  width: auto;
+  flex: 0 1 auto;
+  min-width: 8ch;
+  max-width: 100%;
   font-family: "Inter Tight", "Segoe UI", sans-serif;
   letter-spacing: -0.02em;
   font-size: 0.92rem;
@@ -371,7 +386,8 @@ h1 {
 }
 
 .section-task-add {
-  margin-right: 0.04rem;
+  margin-right: 0;
+  flex: 0 0 auto;
 }
 
 .toolbar-bottom {
@@ -514,18 +530,21 @@ h1 {
   }
 
   .app-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.42rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 0.5rem;
+    row-gap: 0.2rem;
     padding-top: 0.72rem;
   }
 
-  .sync-pill {
-    align-self: flex-start;
+  .branding {
+    min-width: 0;
   }
 
   .status-tools {
-    align-self: flex-start;
+    justify-self: end;
+    align-self: start;
   }
 
   .title-row {
@@ -548,7 +567,8 @@ h1 {
 
   .drag-btn,
   .delete-btn,
-  .priority-btn {
+  .priority-btn,
+  .task-add-btn {
     width: 2.02rem;
     height: 2.02rem;
   }
