@@ -6,21 +6,6 @@
       "title": "Entré",
       "tasks": [
         {
-          "id": "task-1",
-          "text": "Legge flis i gangen",
-          "done": true
-        },
-        {
-          "id": "task-2",
-          "text": "Fuge flis",
-          "done": true
-        },
-        {
-          "id": "task-6",
-          "text": "Male vegger",
-          "done": true
-        },
-        {
           "id": "task-3",
           "text": "Silikonere",
           "done": true
@@ -37,7 +22,12 @@
         },
         {
           "id": "task-5bbbc72a-0033-4f11-9f87-36c6ef999a86",
-          "text": "Dette er en oppgave",
+          "text": "Flislegge bad",
+          "done": false
+        },
+        {
+          "id": "task-2097ea5e-b1c5-47fe-a574-5731490f19ed",
+          "text": "Fuge fliser",
           "done": false
         }
       ]
@@ -45,7 +35,18 @@
     {
       "id": "section-7ca9c967-33bf-4bbb-af5b-8dc8a7a16693",
       "title": "Kjøkken",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "task-3d4b012f-1637-4f84-a01a-a6902081eed1",
+          "text": "Montere kjøkken",
+          "done": false
+        },
+        {
+          "id": "task-3a0a90f8-75cb-4e35-920d-cd3cd472cf3f",
+          "text": "Montere benkeplate",
+          "done": false
+        }
+      ]
     },
     {
       "id": "section-7bb27510-dece-4ae6-8383-cbd6e2f71c54",
@@ -63,5 +64,5 @@
       "tasks": []
     }
   ],
-  "updatedAt": "2026-02-15T19:51:14.333Z"
+  "updatedAt": "2026-02-15T21:38:11.658Z"
 }

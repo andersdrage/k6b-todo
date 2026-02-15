@@ -8,6 +8,8 @@ const syncLabel = document.getElementById("syncLabel");
 const logoImage = document.getElementById("logoImage");
 const logoShell = document.getElementById("logoShell");
 const saveToast = document.getElementById("saveToast");
+const translateOverlay = document.getElementById("translateOverlay");
+const polishToggleText = polishToggle ? polishToggle.querySelector("span:last-child") : null;
 
 const LANGUAGE_STORAGE_KEY = "kirkeaas-board-language";
 
@@ -82,7 +84,8 @@ function normalizeState(nextState) {
               .map((task) => ({
                 id: String(task.id || toId("task")),
                 text: String(task.text || "").trim(),
-                done: Boolean(task.done)
+                done: Boolean(task.done),
+                starred: Boolean(task.starred)
               }))
               .filter((task) => task.text.length > 0)
           : []
@@ -98,7 +101,7 @@ function normalizeState(nextState) {
 
 function setSyncStatus(isConnected) {
   syncPill.classList.toggle("connected", isConnected);
-  syncLabel.textContent = isConnected ? "In sync" : "Reconnecting...";
+  syncLabel.textContent = isConnected ? "Up to date" : "Reconnecting...";
 }
 
 function scheduleSavedToast() {
@@ -172,12 +175,20 @@ function setPolishMode(nextMode) {
   isPolishMode = Boolean(nextMode);
   localStorage.setItem(LANGUAGE_STORAGE_KEY, isPolishMode ? "pl" : "default");
   document.body.classList.toggle("polish-mode", isPolishMode);
-  updatePolishToggle();
+  if (!isPolishMode) {
+    if (translationTimer) {
+      clearTimeout(translationTimer);
+      translationTimer = null;
+    }
+    translationRequestId += 1;
+    translationInFlight = false;
+  }
 
   if (isPolishMode) {
     scheduleTranslation();
   }
 
+  updatePolishToggle();
   render();
 }
 
@@ -186,10 +197,19 @@ function updatePolishToggle() {
     return;
   }
 
+  if (polishToggleText) {
+    polishToggleText.textContent = isPolishMode ? "Norsk" : "Polish";
+  }
+
   polishToggle.classList.toggle("active", isPolishMode);
   polishToggle.classList.toggle("loading", translationInFlight);
   polishToggle.setAttribute("aria-pressed", isPolishMode ? "true" : "false");
-  polishToggle.textContent = translationInFlight && isPolishMode ? "Polish..." : "Polish";
+
+  if (translateOverlay) {
+    const isVisible = isPolishMode && translationInFlight;
+    translateOverlay.classList.toggle("visible", isVisible);
+    translateOverlay.setAttribute("aria-hidden", isVisible ? "false" : "true");
+  }
 }
 
 function clearTranslationCache() {
@@ -329,6 +349,17 @@ function removeSection(sectionId) {
   commitState();
 }
 
+function toggleTaskPriority(sectionId, taskId) {
+  const section = state.sections.find((entry) => entry.id === sectionId);
+  const task = section?.tasks.find((entry) => entry.id === taskId);
+  if (!task) {
+    return;
+  }
+
+  task.starred = !task.starred;
+  commitState();
+}
+
 function moveItem(list, fromIndex, toIndex) {
   const copy = [...list];
   const [item] = copy.splice(fromIndex, 1);
@@ -358,7 +389,8 @@ function createTask(sectionId) {
   section.tasks.push({
     id: taskId,
     text: "New task",
-    done: false
+    done: false,
+    starred: false
   });
 
   setPendingFocus({ type: "task", sectionId, taskId });
@@ -471,10 +503,11 @@ function render() {
           const taskReadonly = isPolishMode ? "readonly" : "";
 
           return `
-            <li class="task-item ${task.done ? "is-done" : ""}" data-task-id="${escapeHtml(task.id)}">
+            <li class="task-item ${task.done ? "is-done" : ""} ${task.starred ? "is-priority" : ""}" data-task-id="${escapeHtml(task.id)}">
               <button class="drag-btn task-drag" type="button" title="Drag task" aria-label="Drag task">⋮⋮</button>
               <input class="task-checkbox" type="checkbox" ${task.done ? "checked" : ""} data-section-id="${escapeHtml(section.id)}" data-task-id="${escapeHtml(task.id)}" />
               <input class="task-text-input" type="text" value="${escapeHtml(taskText)}" maxlength="220" ${taskReadonly} data-section-id="${escapeHtml(section.id)}" data-task-id="${escapeHtml(task.id)}" aria-label="Task text" />
+              <button class="priority-btn ${task.starred ? "active" : ""}" type="button" title="Mark as priority" aria-label="Mark as priority" aria-pressed="${task.starred ? "true" : "false"}" data-action="toggle-priority" data-section-id="${escapeHtml(section.id)}" data-task-id="${escapeHtml(task.id)}">${task.starred ? "★" : "☆"}</button>
               <button class="delete-btn" type="button" title="Delete task" aria-label="Delete task" data-action="delete-task" data-section-id="${escapeHtml(section.id)}" data-task-id="${escapeHtml(task.id)}">✕</button>
             </li>
           `;
@@ -627,6 +660,15 @@ sectionsEl.addEventListener("click", (event) => {
 
   if (action === "delete-section" && sectionId) {
     removeSection(sectionId);
+    return;
+  }
+
+  if (action === "toggle-priority" && sectionId && button.dataset.taskId) {
+    if (isPolishMode) {
+      return;
+    }
+
+    toggleTaskPriority(sectionId, button.dataset.taskId);
     return;
   }
 

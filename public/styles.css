@@ -14,8 +14,10 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
   min-height: 100vh;
   font-family: "Manrope", "Segoe UI", sans-serif;
   color: var(--ink);
@@ -29,22 +31,30 @@ body {
   background: var(--canvas);
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;
-  padding: 0.85rem 0.95rem 1rem;
+  padding: 0;
+}
+
+.app-header,
+.sections-grid,
+.toolbar-bottom {
+  width: calc(100% - 1.9rem);
+  margin-left: 0.95rem;
+  margin-right: 0.95rem;
 }
 
 .app-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.65rem;
+  padding-top: 0.85rem;
   padding-bottom: 0.52rem;
   border-bottom: none;
 }
 
 .status-tools {
   display: inline-flex;
-  align-items: center;
-  gap: 0.38rem;
+  align-items: flex-start;
 }
 
 .branding {
@@ -56,18 +66,18 @@ body {
 .logo-shell {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
-  background: #f0f0f0;
-  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  border: none;
   overflow: hidden;
-  display: grid;
-  place-items: center;
+  display: block;
 }
 
 .logo-shell img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  display: block;
 }
 
 .logo-shell.fallback {
@@ -87,10 +97,10 @@ h1 {
   line-height: 1;
 }
 
-.subtitle {
-  margin: 0.1rem 0 0;
-  font-size: 0.73rem;
-  color: var(--ink-muted);
+.title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
 }
 
 .sync-pill {
@@ -103,33 +113,66 @@ h1 {
   border-radius: 999px;
   background: var(--canvas-soft);
   padding: 0.28rem 0.5rem;
+  cursor: default;
 }
 
 .language-toggle {
-  border: 1px solid var(--line);
+  border: 1px solid #ffd7c2;
   border-radius: 999px;
-  background: var(--canvas-soft);
-  color: var(--ink-muted);
+  background: #fff7f2;
+  color: #9e4400;
   font-size: 0.69rem;
   font-weight: 600;
-  padding: 0.28rem 0.55rem;
+  padding: 0.28rem 0.56rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
   cursor: pointer;
   transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
 }
 
 .language-toggle:hover {
-  border-color: #cfcfcf;
-  color: #4a4a4a;
+  border-color: #ffc19f;
+  background: #fff2ea;
 }
 
 .language-toggle.active {
-  border-color: rgba(255, 90, 0, 0.35);
-  color: #9e4400;
-  background: rgba(255, 90, 0, 0.08);
+  border-color: rgba(255, 90, 0, 0.45);
+  color: #8f3e00;
+  background: rgba(255, 90, 0, 0.12);
 }
 
 .language-toggle.loading {
   opacity: 0.7;
+}
+
+.language-icon {
+  width: 0.74rem;
+  height: 0.74rem;
+  border: 1.4px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+
+.language-icon::before,
+.language-icon::after {
+  content: "";
+  position: absolute;
+}
+
+.language-icon::before {
+  inset: -1px 2.8px;
+  border-left: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.language-icon::after {
+  left: 1px;
+  right: 1px;
+  top: 50%;
+  border-top: 1px solid currentColor;
 }
 
 .sync-dot {
@@ -145,7 +188,7 @@ h1 {
 }
 
 .sections-grid {
-  margin-top: 0.18rem;
+  margin-top: 0.12rem;
 }
 
 .section-card {
@@ -225,7 +268,7 @@ h1 {
 
 .task-item {
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto auto;
   align-items: center;
   gap: 0.22rem;
   min-height: 2rem;
@@ -266,6 +309,39 @@ h1 {
   opacity: 0.72;
 }
 
+.task-item.is-priority {
+  background: rgba(255, 218, 89, 0.16);
+}
+
+.task-item.is-priority .task-text-input {
+  color: #5a4a1a;
+}
+
+.priority-btn {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  color: #c0c0c0;
+  font-size: 0.92rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+.priority-btn:hover {
+  color: #888888;
+  transform: translateY(-1px);
+}
+
+.priority-btn.active {
+  color: #f2b400;
+}
+
 .new-task-form {
   display: flex;
   align-items: center;
@@ -303,6 +379,7 @@ h1 {
 
 .toolbar-bottom {
   margin-top: 1.25rem;
+  padding-bottom: 1.15rem;
   padding-top: 0;
   border-top: none;
 }
@@ -361,16 +438,17 @@ h1 {
 .save-toast {
   position: fixed;
   left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%) translateY(8px);
+  top: 16px;
+  transform: translateX(-50%) translateY(-8px);
   opacity: 0;
   pointer-events: none;
-  background: rgba(28, 28, 28, 0.92);
+  background: #43b86f;
   color: #ffffff;
   border-radius: 999px;
   padding: 0.4rem 0.66rem;
   font-size: 0.75rem;
   transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 60;
 }
 
 .save-toast.visible {
@@ -383,17 +461,66 @@ h1 {
   cursor: default;
 }
 
+.translate-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  z-index: 55;
+}
+
+.translate-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.translate-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #ebc8b1;
+  border-radius: 999px;
+  padding: 0.52rem 0.78rem;
+  color: #7b3400;
+  font-size: 0.79rem;
+  font-weight: 600;
+}
+
+.translate-spinner {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid rgba(255, 90, 0, 0.22);
+  border-top-color: #ff5a00;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 700px) {
-  .app-shell {
-    width: 100%;
-    border: none;
-    padding: 0.72rem 0.72rem 0.86rem;
+  .app-header,
+  .sections-grid,
+  .toolbar-bottom {
+    width: calc(100% - 1rem);
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .app-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.42rem;
+    padding-top: 0.72rem;
   }
 
   .sync-pill {
@@ -402,6 +529,11 @@ h1 {
 
   .status-tools {
     align-self: flex-start;
+  }
+
+  .title-row {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
   }
 
   .section-card {
@@ -418,7 +550,8 @@ h1 {
   }
 
   .drag-btn,
-  .delete-btn {
+  .delete-btn,
+  .priority-btn {
     width: 2.02rem;
     height: 2.02rem;
   }

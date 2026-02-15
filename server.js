@@ -27,12 +27,12 @@ function createDefaultState() {
         id: `section-${randomUUID()}`,
         title: "Entré",
         tasks: [
-          { id: `task-${randomUUID()}`, text: "Legge flis i gangen", done: false },
-          { id: `task-${randomUUID()}`, text: "Fuge flis", done: false },
-          { id: `task-${randomUUID()}`, text: "Silikonere", done: false },
-          { id: `task-${randomUUID()}`, text: "Fikse flis i entré", done: false },
-          { id: `task-${randomUUID()}`, text: "Pusse ferdig vegg", done: false },
-          { id: `task-${randomUUID()}`, text: "Male vegger", done: false }
+          { id: `task-${randomUUID()}`, text: "Legge flis i gangen", done: false, starred: false },
+          { id: `task-${randomUUID()}`, text: "Fuge flis", done: false, starred: false },
+          { id: `task-${randomUUID()}`, text: "Silikonere", done: false, starred: false },
+          { id: `task-${randomUUID()}`, text: "Fikse flis i entré", done: false, starred: false },
+          { id: `task-${randomUUID()}`, text: "Pusse ferdig vegg", done: false, starred: false },
+          { id: `task-${randomUUID()}`, text: "Male vegger", done: false, starred: false }
         ]
       }
     ],
@@ -77,7 +77,8 @@ function sanitizeState(rawState) {
       tasks.push({
         id: typeof rawTask.id === "string" && rawTask.id ? rawTask.id : `task-${randomUUID()}`,
         text,
-        done: Boolean(rawTask.done)
+        done: Boolean(rawTask.done),
+        starred: Boolean(rawTask.starred)
       });
     }
 

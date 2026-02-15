@@ -20,31 +20,41 @@
             <img id="logoImage" src="/logo.svg" alt="Kirkeåsveien 6b logo" />
           </div>
           <div>
-            <h1>Kirkeåsveien 6b</h1>
-            <p class="subtitle">Shared build board</p>
+            <div class="title-row">
+              <h1>Kirkeåsveien 6b</h1>
+              <div class="sync-pill" id="syncPill">
+                <span class="sync-dot" id="syncDot"></span>
+                <span id="syncLabel">Connecting...</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="status-tools">
-          <button id="polishToggle" type="button" class="language-toggle" aria-pressed="false">Polish</button>
-          <div class="sync-pill" id="syncPill">
-            <span class="sync-dot" id="syncDot"></span>
-            <span id="syncLabel">Connecting...</span>
+          <button id="polishToggle" type="button" class="language-toggle" aria-pressed="false">
+            <span class="language-icon" aria-hidden="true"></span>
+            <span>Polish</span>
+          </button>
           </div>
-        </div>
       </header>
 
       <section id="sections" class="sections-grid" aria-live="polite"></section>
 
       <section class="toolbar toolbar-bottom">
         <button id="addSectionBtn" type="button" class="section-cta">
-          <span class="section-cta-text">Add section</span>
+          <span class="section-cta-text">Legg til seksjon</span>
           <span class="section-cta-icon" aria-hidden="true">+</span>
         </button>
       </section>
     </main>
 
     <div id="saveToast" class="save-toast" role="status" aria-live="polite">Saved</div>
+    <div id="translateOverlay" class="translate-overlay" aria-live="polite" aria-hidden="true">
+      <div class="translate-loading">
+        <span class="translate-spinner" aria-hidden="true"></span>
+        <span>Translating to Polish...</span>
+      </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
