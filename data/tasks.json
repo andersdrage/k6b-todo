@@ -1,0 +1,67 @@
+{
+  "title": "Kirkeåsveien 6b",
+  "sections": [
+    {
+      "id": "section-entre",
+      "title": "Entré",
+      "tasks": [
+        {
+          "id": "task-1",
+          "text": "Legge flis i gangen",
+          "done": true
+        },
+        {
+          "id": "task-2",
+          "text": "Fuge flis",
+          "done": true
+        },
+        {
+          "id": "task-6",
+          "text": "Male vegger",
+          "done": true
+        },
+        {
+          "id": "task-3",
+          "text": "Silikonere",
+          "done": true
+        },
+        {
+          "id": "task-4",
+          "text": "Fikse flis i entré",
+          "done": true
+        },
+        {
+          "id": "task-5",
+          "text": "Pusse ferdig vegg",
+          "done": true
+        },
+        {
+          "id": "task-5bbbc72a-0033-4f11-9f87-36c6ef999a86",
+          "text": "Dette er en oppgave",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "section-7ca9c967-33bf-4bbb-af5b-8dc8a7a16693",
+      "title": "Kjøkken",
+      "tasks": []
+    },
+    {
+      "id": "section-7bb27510-dece-4ae6-8383-cbd6e2f71c54",
+      "title": "Bad",
+      "tasks": []
+    },
+    {
+      "id": "section-821fa19c-48cf-4abc-9a05-f61d036b7669",
+      "title": "New section",
+      "tasks": []
+    },
+    {
+      "id": "section-f9624887-7f5f-4899-9e44-5629735a6f72",
+      "title": "New section",
+      "tasks": []
+    }
+  ],
+  "updatedAt": "2026-02-15T19:51:14.333Z"
+}

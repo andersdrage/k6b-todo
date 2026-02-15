@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kirkeåsveien 6b</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="branding">
+          <div class="logo-shell" id="logoShell">
+            <img id="logoImage" src="/logo.svg" alt="Kirkeåsveien 6b logo" />
+          </div>
+          <div>
+            <h1>Kirkeåsveien 6b</h1>
+            <p class="subtitle">Shared build board</p>
+          </div>
+        </div>
+
+        <div class="status-tools">
+          <button id="polishToggle" type="button" class="language-toggle" aria-pressed="false">Polish</button>
+          <div class="sync-pill" id="syncPill">
+            <span class="sync-dot" id="syncDot"></span>
+            <span id="syncLabel">Connecting...</span>
+          </div>
+        </div>
+      </header>
+
+      <section id="sections" class="sections-grid" aria-live="polite"></section>
+
+      <section class="toolbar toolbar-bottom">
+        <button id="addSectionBtn" type="button" class="section-cta">
+          <span class="section-cta-text">Add section</span>
+          <span class="section-cta-icon" aria-hidden="true">+</span>
+        </button>
+      </section>
+    </main>
+
+    <div id="saveToast" class="save-toast" role="status" aria-live="polite">Saved</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
