@@ -8,6 +8,7 @@ const { Server } = require("socket.io");
 const PORT = Number(process.env.PORT) || 3000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_TRANSLATION_MODEL = process.env.OPENAI_TRANSLATION_MODEL || process.env.OPENAI_MODEL || "gpt-4o-mini";
+const OPENAI_TRANSLATION_MAX_OUTPUT_TOKENS = Number(process.env.OPENAI_TRANSLATION_MAX_OUTPUT_TOKENS) || 5000;
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(__dirname, "data");
@@ -225,13 +226,37 @@ async function translateSectionsWithOpenAI(input) {
     throw error;
   }
 
-  const prompt = [
-    `Translate all text values to ${input.targetLanguage} for a construction todo board.`,
-    "Keep ids exactly unchanged.",
-    "Keep the same JSON structure and ordering.",
-    'Return only strict JSON with this schema: {"sections":[{"id":"...","title":"...","tasks":[{"id":"...","text":"..."}]}]}',
-    `Input JSON: ${JSON.stringify({ sections: input.sections })}`
-  ].join("\n");
+  const schema = {
+    type: "object",
+    additionalProperties: false,
+    required: ["sections"],
+    properties: {
+      sections: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["id", "title", "tasks"],
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            tasks: {
+              type: "array",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["id", "text"],
+                properties: {
+                  id: { type: "string" },
+                  text: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -241,8 +266,40 @@ async function translateSectionsWithOpenAI(input) {
     },
     body: JSON.stringify({
       model: OPENAI_TRANSLATION_MODEL,
-      input: prompt,
-      max_output_tokens: 1200
+      input: [
+        {
+          role: "system",
+          content: [
+            {
+              type: "input_text",
+              text: [
+                `Translate all text values to ${input.targetLanguage} for a construction todo board.`,
+                "Keep ids exactly unchanged.",
+                "Keep ordering and object shape unchanged.",
+                "Return translated text only."
+              ].join(" ")
+            }
+          ]
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: JSON.stringify({ sections: input.sections })
+            }
+          ]
+        }
+      ],
+      text: {
+        format: {
+          type: "json_schema",
+          name: "translated_sections",
+          strict: true,
+          schema
+        }
+      },
+      max_output_tokens: OPENAI_TRANSLATION_MAX_OUTPUT_TOKENS
     })
   });
 
@@ -255,6 +312,15 @@ async function translateSectionsWithOpenAI(input) {
   }
 
   const payload = await response.json();
+  if (payload?.status === "incomplete" && payload?.incomplete_details?.reason === "max_output_tokens") {
+    const error = new Error(
+      `Translation output was truncated at max_output_tokens=${OPENAI_TRANSLATION_MAX_OUTPUT_TOKENS}`
+    );
+    error.statusCode = 502;
+    error.code = "output_truncated";
+    throw error;
+  }
+
   try {
     const rawText = getTextFromResponsesPayload(payload);
     const parsed = extractJsonFromModelOutput(rawText);
