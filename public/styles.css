@@ -197,7 +197,7 @@ h1 {
 
 .section-head {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 0.12rem;
   margin-bottom: 0.24rem;
@@ -342,15 +342,6 @@ h1 {
   color: #f2b400;
 }
 
-.new-task-form {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 0.32rem;
-  padding-top: 0.36rem;
-  border-top: 1px solid var(--line);
-}
-
 .task-add-btn {
   width: 1.74rem;
   height: 1.74rem;
@@ -359,22 +350,28 @@ h1 {
   border: 1px solid var(--line-strong);
   background: #ffffff;
   color: #4b4b4b;
-  font-size: 1.02rem;
+  font-size: 1.14rem;
   line-height: 1;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
-  transition: border-color 120ms ease, color 120ms ease;
+  transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
 }
 
-.task-add-btn:hover {
-  border-color: #bcbcbc;
-  color: #212121;
+.task-add-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .task-add-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.section-task-add {
+  margin-right: 0.04rem;
 }
 
 .toolbar-bottom {

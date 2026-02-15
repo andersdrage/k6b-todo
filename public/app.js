@@ -519,16 +519,13 @@ function render() {
           <div class="section-head">
             <button class="drag-btn section-drag" type="button" title="Drag section" aria-label="Drag section">⋮⋮</button>
             <input class="section-title-input" type="text" value="${escapeHtml(sectionTitle)}" maxlength="80" ${sectionReadonly} data-section-id="${escapeHtml(section.id)}" />
+            <button type="button" class="task-add-btn section-task-add" data-action="create-task" data-section-id="${escapeHtml(section.id)}" ${addTaskDisabled} aria-label="Add task">+</button>
             <button class="delete-btn" type="button" title="Delete section" aria-label="Delete section" data-action="delete-section" data-section-id="${escapeHtml(section.id)}">✕</button>
           </div>
 
           <ul class="task-list" data-section-id="${escapeHtml(section.id)}">
             ${tasksMarkup}
           </ul>
-
-          <div class="new-task-form">
-            <button type="button" class="task-add-btn" data-action="create-task" data-section-id="${escapeHtml(section.id)}" ${addTaskDisabled} aria-label="Add task">+</button>
-          </div>
         </article>
       `;
     })
