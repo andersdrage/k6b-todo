@@ -175,17 +175,8 @@ function setPolishMode(nextMode) {
   isPolishMode = Boolean(nextMode);
   localStorage.setItem(LANGUAGE_STORAGE_KEY, isPolishMode ? "pl" : "default");
   document.body.classList.toggle("polish-mode", isPolishMode);
-  if (!isPolishMode) {
-    if (translationTimer) {
-      clearTimeout(translationTimer);
-      translationTimer = null;
-    }
-    translationRequestId += 1;
-    translationInFlight = false;
-  }
-
   if (isPolishMode) {
-    scheduleTranslation();
+    scheduleTranslation(0);
   }
 
   updatePolishToggle();
@@ -202,7 +193,7 @@ function updatePolishToggle() {
   }
 
   polishToggle.classList.toggle("active", isPolishMode);
-  polishToggle.classList.toggle("loading", translationInFlight);
+  polishToggle.classList.toggle("loading", isPolishMode && translationInFlight);
   polishToggle.setAttribute("aria-pressed", isPolishMode ? "true" : "false");
 
   if (translateOverlay) {
@@ -230,26 +221,24 @@ function translationPayloadFromState() {
 }
 
 function scheduleTranslation() {
-  if (!isPolishMode) {
-    return;
+  let delayMs = 320;
+  if (arguments.length > 0 && Number.isFinite(arguments[0])) {
+    delayMs = Math.max(0, Number(arguments[0]));
   }
-
   if (translationTimer) {
     clearTimeout(translationTimer);
   }
 
   translationTimer = setTimeout(() => {
     requestPolishTranslations();
-  }, 320);
+  }, delayMs);
 }
 
 async function requestPolishTranslations() {
-  if (!isPolishMode) {
-    return;
-  }
-
   const signature = translationSourceSignature(state);
   if (signature === translationSignature) {
+    translationInFlight = false;
+    updatePolishToggle();
     return;
   }
 
@@ -381,7 +370,7 @@ function createSection() {
   });
 
   setPendingFocus({ type: "section", sectionId });
-  commitState();
+  commitState({ translateImmediately: true });
 }
 
 function createTask(sectionId) {
@@ -399,7 +388,7 @@ function createTask(sectionId) {
   });
 
   setPendingFocus({ type: "task", sectionId, taskId });
-  commitState();
+  commitState({ translateImmediately: true });
 }
 
 function destroySortables() {
@@ -542,15 +531,12 @@ function render() {
   applyPendingFocus();
 }
 
-function commitState() {
+function commitState(options = {}) {
   state.updatedAt = new Date().toISOString();
   socket.emit("state:update", state);
   render();
   scheduleSavedToast();
-
-  if (isPolishMode) {
-    scheduleTranslation();
-  }
+  scheduleTranslation(options.translateImmediately ? 0 : 320);
 }
 
 if (addSectionBtn) {
@@ -699,10 +685,7 @@ socket.on("state:sync", (incoming) => {
 
   state = normalized;
   render();
-
-  if (isPolishMode) {
-    scheduleTranslation();
-  }
+  scheduleTranslation(220);
 });
 
 if (logoImage) {
